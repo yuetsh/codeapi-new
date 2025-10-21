@@ -32,4 +32,4 @@ COPY . .
 EXPOSE 8080
 
 # 设置启动命令
-CMD ["uv", "run", "python", "main.py"]
+CMD ["python", "main.py"]
