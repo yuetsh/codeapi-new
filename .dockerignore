@@ -1,0 +1,75 @@
+# Python 缓存和编译文件
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# 虚拟环境
+.env
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
+
+# 数据库文件（保留主数据库文件，排除临时文件）
+database.db-shm
+database.db-wal
+
+# IDE 和编辑器文件
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# 操作系统文件
+.DS_Store
+Thumbs.db
+.directory
+
+# 日志文件
+*.log
+logs/
+
+# uv 缓存
+.uv/
+
+# Git 相关
+.git/
+.gitignore
+
+# 测试文件
+test_*.py
+*_test.py
+tests/
+
+# 文档文件
+README.md
+*.md
+docs/
+
+# Docker 相关
+Dockerfile
+.dockerignore
+
+# 临时文件
+*.tmp
+*.temp
