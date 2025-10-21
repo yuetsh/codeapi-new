@@ -19,17 +19,11 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制项目文件
-COPY pyproject.toml ./
-COPY uv.lock ./
+COPY requirements.txt ./
 
-# 安装 uv 包管理器（使用中科大 PyPI 镜像）
-RUN pip install -i https://pypi.mirrors.ustc.edu.cn/simple/ uv
-
-# 配置中科大 PyPI 镜像源
-RUN uv config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple/
-
-# 使用 uv 安装 Python 依赖
-RUN uv sync --frozen
+# 安装依赖（使用中科大 PyPI 镜像）
+RUN pip config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple/
+RUN pip install -r requirements.txt
 
 # 复制应用代码
 COPY . .
