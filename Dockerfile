@@ -9,9 +9,9 @@ ENV PYTHONUNBUFFERED=1
 ENV PYTHONDONTWRITEBYTECODE=1
 
 # 配置中科大镜像源
-RUN echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm main" > /etc/apt/sources.list && \
-    echo "deb https://mirrors.ustc.edu.cn/debian/ bookworm-updates main" >> /etc/apt/sources.list && \
-    echo "deb https://mirrors.ustc.edu.cn/debian-security bookworm-security main" >> /etc/apt/sources.list
+# 配置 apt 镜像源
+RUN sed -i 's/deb.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources && \
+    sed -i 's/security.debian.org/mirrors.ustc.edu.cn/g' /etc/apt/sources.list.d/debian.sources
 
 # 安装系统依赖
 RUN apt-get update && apt-get install -y \
@@ -22,8 +22,8 @@ RUN apt-get update && apt-get install -y \
 COPY pyproject.toml ./
 COPY uv.lock ./
 
-# 安装 uv 包管理器
-RUN pip install uv
+# 安装 uv 包管理器（使用中科大 PyPI 镜像）
+RUN pip install -i https://pypi.mirrors.ustc.edu.cn/simple/ uv
 
 # 配置中科大 PyPI 镜像源
 RUN uv config set global.index-url https://pypi.mirrors.ustc.edu.cn/simple/
