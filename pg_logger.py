@@ -313,10 +313,10 @@ def raw_input_wrapper(prompt=""):
     if input_string_queue:
         input_str = input_string_queue.pop(0)
 
-        # write the prompt and user input to stdout, to emulate what happens
-        # at the terminal
+        # write the prompt to stdout, to emulate what happens at the terminal
+        # but don't write the user input to avoid duplication in debug output
         sys.stdout.write(str(prompt))  # always convert prompt into a string
-        sys.stdout.write(input_str + "\n")  # newline to simulate the user hitting Enter
+        # sys.stdout.write(input_str + "\n")  # removed to prevent input duplication
         return input_str
     raise RawInputException(str(prompt))  # always convert prompt into a string
 
@@ -326,10 +326,10 @@ def python2_input_wrapper(prompt=""):
     if input_string_queue:
         input_str = input_string_queue.pop(0)
 
-        # write the prompt and user input to stdout, to emulate what happens
-        # at the terminal
+        # write the prompt to stdout, to emulate what happens at the terminal
+        # but don't write the user input to avoid duplication in debug output
         sys.stdout.write(str(prompt))  # always convert prompt into a string
-        sys.stdout.write(input_str + "\n")  # newline to simulate the user hitting Enter
+        # sys.stdout.write(input_str + "\n")  # removed to prevent input duplication
         return eval(input_str)  # remember to eval!
     raise RawInputException(str(prompt))  # always convert prompt into a string
 
