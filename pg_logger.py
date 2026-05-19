@@ -1554,7 +1554,8 @@ class PGLogger(bdb.Bdb):
                             for n in node.names:
                                 all_modules_to_preimport.append(n.name)
                         elif isinstance(node, ast.ImportFrom):
-                            all_modules_to_preimport(node.module)
+                            if node.module:
+                                all_modules_to_preimport.append(node.module)
 
                     for m in all_modules_to_preimport:
                         if (
@@ -1704,12 +1705,10 @@ class PGLogger(bdb.Bdb):
 
         res = self.trace
 
-        # if the SECOND to last entry is an 'exception'
-        # and the last entry is return from <module>, then axe the last
-        # entry, for aesthetic reasons :)
+        # remove the final 'return' from <module> — it's a bdb artifact that
+        # fires when the script finishes, not a user-visible step
         if (
-            len(res) >= 2
-            and res[-2]["event"] == "exception"
+            len(res) >= 1
             and res[-1]["event"] == "return"
             and res[-1]["func_name"] == "<module>"
         ):
@@ -1809,4 +1808,5 @@ def exec_script_str_local(
     except bdb.BdbQuit:
         pass
     finally:
-        return logger.finalize()
+        result = logger.finalize()
+    return result
