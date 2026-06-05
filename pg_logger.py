@@ -1712,6 +1712,8 @@ class PGLogger(bdb.Bdb):
             and res[-1]["event"] == "return"
             and res[-1]["func_name"] == "<module>"
         ):
+            if len(res) >= 2:
+                res[-2]["stdout"] = res[-1]["stdout"]
             res.pop()
 
         self.trace = res
