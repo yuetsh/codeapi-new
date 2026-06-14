@@ -17,6 +17,7 @@ openai==2.14.0
 pydantic==2.12.5
 pydantic-core==2.41.5
 pypika-tortoise==0.6.3
+ruff==0.15.17
 python-dotenv==1.2.1
 pytz==2025.2
 pyyaml==6.0.3

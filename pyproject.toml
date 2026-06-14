@@ -12,4 +12,10 @@ dependencies = [
     "tortoise-orm>=0.25.1",
     "aiosqlite==0.21",
     "uvicorn[standard]>=0.38.0",
+    "ruff>=0.15.17",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.0",
 ]
