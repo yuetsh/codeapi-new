@@ -2,7 +2,7 @@ import subprocess
 
 TIMEOUT_SECONDS = 5
 
-CLANG_FORMAT_STYLE = "{BasedOnStyle: LLVM, IndentWidth: 4, BreakBeforeBraces: Allman}"
+CLANG_FORMAT_STYLE = "{BasedOnStyle: LLVM, IndentWidth: 4, BreakBeforeBraces: Attach}"
 
 
 class FormatError(Exception):
