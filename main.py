@@ -5,9 +5,16 @@ from fastapi.responses import StreamingResponse
 import os
 import json
 from openai import OpenAI
-from schemas import PresetCodeCreate, AIAnalysisRequest, DebugRequest
+from schemas import (
+    PresetCodeCreate,
+    AIAnalysisRequest,
+    DebugRequest,
+    FormatRequest,
+    FormatResponse,
+)
 from database import DatabaseService
 from pg_logger import exec_script_str_local
+from formatter import format_code, FormatError
 from dotenv import load_dotenv
 
 
@@ -137,6 +144,16 @@ async def debug(request: DebugRequest):
 
     exec_script_str_local(code, inputs, False, False, dump)
     return {"data": data}
+
+
+@app.post("/format", response_model=FormatResponse)
+async def format_code_endpoint(request: FormatRequest) -> FormatResponse:
+    """格式化代码"""
+    try:
+        formatted = format_code(request.code, request.language)
+    except FormatError as e:
+        raise HTTPException(status_code=400, detail=str(e))
+    return FormatResponse(code=formatted)
 
 
 if __name__ == "__main__":

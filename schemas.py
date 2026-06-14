@@ -32,3 +32,16 @@ class DebugRequest(BaseModel):
     """调试请求模式，用于调试 Python 代码"""
     code: str
     inputs: List[str]
+
+
+class FormatRequest(BaseModel):
+    """格式化代码的请求模式"""
+
+    code: str
+    language: str
+
+
+class FormatResponse(BaseModel):
+    """格式化代码的响应模式"""
+
+    code: str
