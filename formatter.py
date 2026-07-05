@@ -1,5 +1,7 @@
 import subprocess
 
+import sqlparse
+
 TIMEOUT_SECONDS = 5
 
 CLANG_FORMAT_STYLE = "{BasedOnStyle: LLVM, IndentWidth: 4, BreakBeforeBraces: Attach}"
@@ -27,6 +29,16 @@ def _run(cmd: list[str], code: str) -> str:
     return result.stdout
 
 
+def _format_with_sql(code: str) -> str:
+    # sqlparse 对语法错误宽容，不会抛异常，语法问题留给判题阶段反馈
+    # strip_whitespace 会把多条语句压成一行，先按分号拆分再逐条格式化
+    statements = sqlparse.split(code)
+    return "\n\n".join(
+        sqlparse.format(s, strip_whitespace=True, keyword_case="upper")
+        for s in statements
+    )
+
+
 def format_code(code: str, language: str) -> str:
     if language in ("python", "turtle"):
         return _run(["ruff", "format", "-", "--stdin-filename", "main.py"], code)
@@ -41,5 +53,8 @@ def format_code(code: str, language: str) -> str:
             ],
             code,
         )
+
+    if language == "sql":
+        return _format_with_sql(code)
 
     raise FormatError(f"不支持的语言: {language}")
