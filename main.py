@@ -13,7 +13,7 @@ from schemas import (
     FormatResponse,
 )
 from database import DatabaseService
-from pg_logger import exec_script_str_local
+from debug_runner import DebugError, run_debug
 from formatter import format_code, FormatError
 from dotenv import load_dotenv
 
@@ -132,17 +132,16 @@ async def ai_analysis(request: AIAnalysisRequest):
 
 
 @app.post("/debug")
-async def debug(request: DebugRequest):
-    """调试端点"""
-    code = request.code
-    inputs = request.inputs
+def debug(request: DebugRequest) -> dict:
+    """调试端点
 
-    data = {}
-
-    def dump(input_code, output_trace):
-        data.update(dict(code=input_code, trace=output_trace))
-
-    exec_script_str_local(code, inputs, False, False, dump)
+    用同步 def 而不是 async def：跟踪执行是 CPU 密集的阻塞调用，
+    交给 FastAPI 的线程池，避免堵死事件循环。
+    """
+    try:
+        data = run_debug(request.code, request.inputs)
+    except DebugError as e:
+        raise HTTPException(status_code=400, detail=str(e))
     return {"data": data}
 
 
