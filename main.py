@@ -11,10 +11,13 @@ from schemas import (
     DebugRequest,
     FormatRequest,
     FormatResponse,
+    RunRequest,
+    RunResponse,
 )
 from database import DatabaseService
 from debug_runner import DebugError, run_debug
 from formatter import format_code, FormatError
+from runner import run_code, RunError
 from dotenv import load_dotenv
 
 
@@ -153,6 +156,16 @@ async def format_code_endpoint(request: FormatRequest) -> FormatResponse:
     except FormatError as e:
         raise HTTPException(status_code=400, detail=str(e))
     return FormatResponse(code=formatted)
+
+
+@app.post("/run", response_model=RunResponse)
+async def run_code_endpoint(request: RunRequest) -> RunResponse:
+    """在 go-judge 沙箱中编译运行 C/C++ 代码"""
+    try:
+        result = await run_code(request.language, request.code, request.stdin)
+    except RunError as e:
+        raise HTTPException(status_code=502, detail=str(e))
+    return RunResponse(**result)
 
 
 if __name__ == "__main__":
